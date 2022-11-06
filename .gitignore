@@ -1,3 +1,4 @@
 api_key.py
 app/__pycache__
 .venv
+app/dev_config.py

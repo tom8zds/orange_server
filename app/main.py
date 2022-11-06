@@ -1,5 +1,9 @@
 from fastapi import FastAPI
 
+from dev_config import api_key
+import tmdbsimple as tmdb
+tmdb.API_KEY = api_key
+
 app = FastAPI()
 
 
