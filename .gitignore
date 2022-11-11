@@ -1,4 +1,4 @@
 api_key.py
-app/__pycache__
+orange/__pycache__
 .venv
-app/dev_config.py
+orange/dev_config.py
