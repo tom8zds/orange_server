@@ -1,3 +1,5 @@
+![unittest](https://github.com/tom8zds/Orange/actions/workflows/unittest.yml/badge.svg)
+
 # Orange
 一体化追番服务, 集成订阅下载链接刮削
 
