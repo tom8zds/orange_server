@@ -61,7 +61,6 @@ class MikanSource(AbstractSource):
         for row in rowElements:
             titleElem = row.find("div", attrs={"class": "row"})
             if (titleElem != None):
-                print(titleElem.text)
                 day = re.sub('\s+', '', titleElem.text)
                 weekDay: WeekDay = _WeekDay[day]
                 anime_list = row.find_all("li")
@@ -75,7 +74,6 @@ class MikanSource(AbstractSource):
                         "div", attrs={"class": "an-info-group"})
 
                     if (anime_info_group.find("a") is None):
-                        print("null")
                         anime_name = anime_info_group.find_all("div")[
                             1].attrs["title"]
                     else:
@@ -85,7 +83,6 @@ class MikanSource(AbstractSource):
 
                     bangumi: Bangumi = Bangumi(anime_id, anime_name, cover)
 
-                    print([anime_id, anime_name, cover])
                     bangumi_list.append(bangumi)
 
                 result[weekDay] = bangumi_list
@@ -97,7 +94,6 @@ class MikanSource(AbstractSource):
             year, quote(_SeasonData.get(season).get("ch")))
 
         url = MIKAN_BASE + MIKAN_SEASON + param
-        print(url)
 
         payload = {}
         headers = {}
