@@ -14,8 +14,8 @@ class Season(Enum):
 class WeekDay(Enum):
     MON = 1
     TUE = 2
-    THR = 3
-    WED = 4
+    WED = 3
+    THU = 4
     FRI = 5
     SAT = 6
     SUN = 7

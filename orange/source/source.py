@@ -10,6 +10,9 @@ class AbstractSource(metaclass=abc.ABCMeta):
         """
         check api token
         """
+
+    @staticmethod
+    @abc.abstractmethod
     def get_time_table(year:int, season:Season) -> TimeTable:
         """
         获取时间表
