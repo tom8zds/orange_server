@@ -1,6 +1,6 @@
 import abc
 
-from orange.source.model.time_table import Season, TimeTable
+from orange.source.model import Season, TimeTable, WeekDay,Bangumi
 
 class AbstractSource(metaclass=abc.ABCMeta):
     

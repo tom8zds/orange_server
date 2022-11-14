@@ -1,8 +1,7 @@
 from http import HTTPStatus
 import re
 from typing import List
-from orange.source.model.bangumi import Bangumi
-from orange.source.model.time_table import Season, TimeTable, WeekDay
+from orange.source.model import Season, TimeTable, WeekDay,Bangumi
 from orange.source.source import AbstractSource
 
 import bs4
@@ -113,7 +112,7 @@ class MikanSource(AbstractSource):
         except Exception as err:
             print(f"Unexpected {err=}, {type(err)=}")
             return [False, err]
-            
+
         return [False, None]
         
             

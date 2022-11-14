@@ -1,17 +1,22 @@
-from enum import Enum
 from dataclasses import dataclass
+from enum import Enum
 from typing import List
 
-from orange.source.model.bangumi import Bangumi
+@dataclass
+class Bangumi:
+    id: int
+    name: str
+    cover: str
 
-class Season(Enum):
+
+class Season(int,Enum):
     SPRING = 4
     SUMMER = 7
     AUTUMN = 10
     WINTER = 1
     OTHER  = 0
 
-class WeekDay(Enum):
+class WeekDay(int,Enum):
     MON = 1
     TUE = 2
     WED = 3
