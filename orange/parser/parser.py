@@ -1,47 +1,25 @@
-import abc
+import re
+from typing import List
+from fastapi import APIRouter
 
-from orange.model.anime_model import Anime
+router = APIRouter(tags=["parser"], prefix="/parser",)
+
+from orange.dev_config import parser
+from orange.parser.abstract_parser import AbstractParser
+from orange.parser.tmdb.tmdb_parser import TmdbParser
+from orange.model.vo.anime_vo import AnimeVO
+
+registed_parser = {
+    "tmdb": TmdbParser
+}
+
+def getParser() -> AbstractParser:
+    parser_type = registed_parser.get(parser, TmdbParser)
+    return parser_type()
 
 
-class AbstractParser(metaclass=abc.ABCMeta):
-    
-    @staticmethod
-    @abc.abstractmethod
-    def check_token() -> None:
-        """
-        check api token
-        """
-
-    @staticmethod
-    @abc.abstractmethod
-    def search_anime() -> None:
-        """
-        check api token
-        """
-
-    @staticmethod
-    @abc.abstractmethod
-    def parse_anime_info(tmdv_id:int) -> Anime:
-        """
-        get from 
-            data source 
-        then
-            parse to {Anime} data model
-        if valid
-            store to database by handler
-        """
-
-    @staticmethod
-    @abc.abstractmethod
-    def parse_season_info() -> None:
-        """
-        check api token
-        """
-
-    @staticmethod
-    @abc.abstractmethod
-    def parse_episode_info() -> None:
-        """
-        check api token
-        """
-                        
+@router.get("/search/{bangumi_name}")
+async def read_item(bangumi_name:str) -> List[AnimeVO]:
+    assert(len(bangumi_name) > 3)
+    bangumi_name = re.sub("第\w+季", "", bangumi_name, count=0, flags=0)
+    return getParser().search_anime(bangumi_name)

@@ -15,5 +15,3 @@ class MikanSourceTest(unittest.TestCase):
     def test_get_bangumi(self):
         flag,data = self.source.query_season(2020, Season.SPRING)
         self.assertTrue(flag)
-        with open('orange_test/mock_file/source/mikan_season.json') as f:
-           self.assertEqual(json.dumps(dataclasses.asdict(data)), f.read())

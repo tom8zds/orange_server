@@ -1,19 +1,26 @@
-import abc
+from typing import List
+from fastapi import APIRouter
+from orange.source.model import Season, TimeTable
 
-from orange.source.model import Season, TimeTable, WeekDay,Bangumi
+from orange.source.mikan.mikan_source import MikanSource
+from orange.source.abstract_source import AbstractSource
 
-class AbstractSource(metaclass=abc.ABCMeta):
-    
-    @staticmethod
-    @abc.abstractmethod
-    def update() -> None:
-        """
-        check api token
-        """
+router = APIRouter(tags=["source"], prefix="/source",)
 
-    @staticmethod
-    @abc.abstractmethod
-    def get_time_table(year:int, season:Season) -> TimeTable:
-        """
-        获取时间表
-        """
+from orange.dev_config import source
+
+registed_source = {
+    "mikan": MikanSource
+}
+
+def getSource() -> AbstractSource:
+    source_type = registed_source.get(source, MikanSource)
+    return source_type()
+
+
+@router.get("/season/")
+async def query_season(year:int, season:Season) -> TimeTable:
+    assert(year > 1900)
+    flag, data = getSource().query_season(year, season)
+    if(flag):
+        return data

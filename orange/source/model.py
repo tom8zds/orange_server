@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from enum import Enum
+from enum import Enum, IntEnum
 from typing import List
 
 @dataclass
@@ -9,14 +9,14 @@ class Bangumi:
     cover: str
 
 
-class Season(int,Enum):
+class Season(IntEnum):
     SPRING = 4
     SUMMER = 7
     AUTUMN = 10
     WINTER = 1
     OTHER  = 0
 
-class WeekDay(int,Enum):
+class WeekDay(IntEnum):
     MON = 1
     TUE = 2
     WED = 3

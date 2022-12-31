@@ -2,7 +2,7 @@ from http import HTTPStatus
 import re
 from typing import List
 from orange.source.model import Season, TimeTable, WeekDay,Bangumi
-from orange.source.source import AbstractSource
+from orange.source.abstract_source import AbstractSource
 
 import bs4
 
@@ -48,9 +48,6 @@ class MikanSource(AbstractSource):
     def update() -> None:
         pass
 
-    def get_time_table(year: int, season: Season) -> TimeTable:
-        pass
-
     def parse_season(self, text: str) -> dict[WeekDay, List[Bangumi]]:
 
         result: dict[WeekDay, List[Bangumi]] = {}
@@ -67,7 +64,7 @@ class MikanSource(AbstractSource):
 
                 bangumi_list: List[Bangumi] = []
                 for anime in anime_list:
-                    cover = anime.find("span").attrs["data-src"]
+                    cover = MIKAN_BASE + anime.find("span").attrs["data-src"]
                     # cover = anime.find("span").attributes("background-image")
                     anime_info = anime.find("div", attrs={"class": "an-info"})
                     anime_info_group = anime_info.find(

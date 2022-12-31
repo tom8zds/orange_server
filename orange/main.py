@@ -1,24 +1,30 @@
+from typing import List
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+from orange.parser import parser
+from orange.source import source
 
-from dev_config import api_key
-import tmdbsimple as tmdb
-tmdb.API_KEY = api_key
-
-app = FastAPI()
+orange = FastAPI()
 
 def write_log(message: str):
     with open("log.txt", mode="a") as log:
         log.write(message)
 
-@app.get("/")
+orange.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+@orange.get("/")
 async def root():
     return {"message": "Hello World"}
 
-@app.get("/search/{bangumi_name}")
-async def read_item(bangumi_name:str):
-    assert(len(bangumi_name) > 3)
-    search = tmdb.Search()
-    response = search.tv (query=bangumi_name, language="zh", include_adult=True)
-    # for s in search.results:
-    #     write_log(s['title'], s['id'], s['release_date'], s['popularity'])
-    return response
+@orange.get("/status")
+async def status():
+    return {"status": 1}
+
+orange.include_router(parser.router)
+orange.include_router(source.router)
