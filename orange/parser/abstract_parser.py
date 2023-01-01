@@ -1,7 +1,7 @@
 import abc
 from typing import List
 
-from orange.model.vo.anime_vo import AnimeVO
+from orange.core.vo.anime_vo import AnimeVO
 
 
 class AbstractParser(metaclass=abc.ABCMeta):

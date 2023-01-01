@@ -7,7 +7,7 @@ router = APIRouter(tags=["parser"], prefix="/parser",)
 from orange.dev_config import parser
 from orange.parser.abstract_parser import AbstractParser
 from orange.parser.tmdb.tmdb_parser import TmdbParser
-from orange.model.vo.anime_vo import AnimeVO
+from orange.core.vo.anime_vo import AnimeVO
 
 registed_parser = {
     "tmdb": TmdbParser

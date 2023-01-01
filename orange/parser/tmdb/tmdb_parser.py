@@ -1,5 +1,5 @@
 from typing import List
-from orange.model.vo.anime_vo import AnimeVO
+from orange.core.vo.anime_vo import AnimeVO
 from orange.parser.abstract_parser import AbstractParser
 
 from orange.dev_config import api_key
