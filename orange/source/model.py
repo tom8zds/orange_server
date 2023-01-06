@@ -1,6 +1,7 @@
-from dataclasses import dataclass
+from pydantic.dataclasses import dataclass
 from enum import Enum, IntEnum
 from typing import List
+
 
 @dataclass
 class Bangumi:
@@ -9,12 +10,43 @@ class Bangumi:
     cover: str
 
 
+@dataclass
+class SubscribeItem:
+    link: str
+    title: str
+    description: str
+    torrent: str
+    size: int
+    update: int
+
+
+@dataclass
+class SubscribeChannel:
+    title: str
+    link: str
+    description: str
+    item: List[SubscribeItem]
+
+
+@dataclass
+class SubGroup:
+    id: int
+    name: str
+
+
+@dataclass
+class BangumiDetail:
+    info: Bangumi
+    subGroups: List[SubGroup]
+
+
 class Season(IntEnum):
     SPRING = 4
     SUMMER = 7
     AUTUMN = 10
     WINTER = 1
-    OTHER  = 0
+    OTHER = 0
+
 
 class WeekDay(IntEnum):
     MON = 1
@@ -25,6 +57,7 @@ class WeekDay(IntEnum):
     SAT = 6
     SUN = 7
     OTH = 0
+
 
 SeasonData = {
     Season.SPRING: {
@@ -45,6 +78,8 @@ SeasonData = {
 }
 
 # 时间点, 用于切换年份和季度
+
+
 @dataclass
 class TimeTable:
     year: int

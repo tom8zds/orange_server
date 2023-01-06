@@ -1,4 +1,4 @@
-import dataclasses
+import pydantic.dataclasses
 import json
 import unittest
 

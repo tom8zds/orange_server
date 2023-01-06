@@ -1,3 +1,4 @@
+import json
 from typing import List
 from orange.core.vo.anime_vo import AnimeVO
 from orange.parser.abstract_parser import AbstractParser
@@ -21,9 +22,18 @@ class TmdbParser(AbstractParser):
         # for s in search.results:
         #     write_log(s['title'], s['id'], s['release_date'], s['popularity'])
         result: List[AnimeVO] = []
-        for item in response.get("results"):
-            anime:AnimeVO = AnimeVO(item.get("id"), item.get("name"), post_basic_url + item.get("poster_path"), item.get("overview"))
-            result.append(anime)
+        animes: List[dict] = response.get("results")
+        for anime in animes:
+            tv = tmdb.TV(anime.get("id")).info(language="zh")
+            seasons:List[dict] = tv.get("seasons")
+            for season in seasons:
+                cover = ""
+                if season.get("poster_path") is None:
+                    cover = anime.get("poster_path")
+                else:
+                    cover = season.get("poster_path")
+                animeVO:AnimeVO = AnimeVO(anime.get("id"),season.get("id"),anime.get("name"), season.get("name"), post_basic_url + cover, season.get("overview"))
+                result.append(animeVO)
         return result
 
     def check_token() -> None:
