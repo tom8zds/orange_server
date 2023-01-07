@@ -1,10 +1,12 @@
+from datetime import datetime
 import re
 from typing import List
 from orange.core.util.utils import write_log
 from orange.source.mikan.mikan_define import MIKAN_BASE, MikanWeekDay
-from orange.source.model import BangumiDetail, SubGroup, WeekDay,Bangumi
+from orange.source.model import *
 
 import bs4
+import xml.etree.ElementTree as ET
 
 
 class MikanParser:
@@ -42,10 +44,10 @@ class MikanParser:
 
                     bangumi_list.append(bangumi)
 
-                result[weekDay] = bangumi_list
+                result[weekDay.value] = bangumi_list
         return result
 
-    def parse_detail(text:str) -> BangumiDetail:
+    def parse_detail(text: str) -> BangumiDetail:
         soup = bs4.BeautifulSoup(text, "html.parser")
 
         # parse info
@@ -56,19 +58,51 @@ class MikanParser:
 
         title = soup.find("p", attrs={"class": "bangumi-title"}).text
 
-        id = soup.find("button", attrs={"class":"js-subscribe_bangumi_page"}).attrs["data-bangumiid"]
+        id = soup.find("button", attrs={
+                       "class": "js-subscribe_bangumi_page"}).attrs["data-bangumiid"]
 
-        bangumi:Bangumi = Bangumi(int(id), title.strip(), urls[0])
+        bangumi: Bangumi = Bangumi(int(id), title.strip(), urls[0])
 
         # parse subgroups
         rowElements = soup.find_all("li", attrs={"class": "leftbar-item"})
 
         write_log(len(rowElements))
 
-        subGroups:List[SubGroup] = []
+        subGroups: List[SubGroup] = []
 
         for row in rowElements:
             titleElem = row.find("a", attrs={"class": "subgroup-name"})
-            subGroups.append(SubGroup(name= titleElem.text, id=titleElem.attrs["data-anchor"].replace('#', '')))
+            subGroups.append(SubGroup(
+                name=titleElem.text, id=titleElem.attrs["data-anchor"].replace('#', '')))
 
         return BangumiDetail(info=bangumi, subGroups=subGroups)
+
+    def parse_rss_channel(xml: str) -> SubscribeChannel:
+        xml = re.sub(r'\sxmlns="[^"]+"', '', xml)
+  
+        # create element tree object
+        tree = ET.fromstring(xml)
+
+        items = []
+
+        title = tree.findtext('./channel/title')
+        link = tree.findtext('./channel/link')
+        description = tree.findtext('./channel/description')
+
+        # iterate news items
+        for item in tree.findall('./channel/item'):
+            item_link= item.findtext('./link')
+            item_title= item.findtext('./title')
+            item_description= item.findtext('./description')
+            item_torrent= item.find('./enclosure').get("url")
+            item_size= item.findtext('./torrent/contentLength')
+            item_update= item.findtext('./torrent/pubDate')
+            if(len(item_update) <23):
+                item_update = item_update + "0"
+
+            items.append(SubscribeItem(item_link, item_title, item_description,
+                         item_torrent, item_size, datetime.fromisoformat(item_update).timestamp()))
+        
+        write_log(len(items))
+
+        return SubscribeChannel(title, link, description, items)

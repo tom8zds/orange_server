@@ -17,7 +17,7 @@ class SubscribeItem:
     description: str
     torrent: str
     size: int
-    update: int
+    update: float
 
 
 @dataclass
@@ -25,7 +25,7 @@ class SubscribeChannel:
     title: str
     link: str
     description: str
-    item: List[SubscribeItem]
+    items: List[SubscribeItem]
 
 
 @dataclass
@@ -78,10 +78,8 @@ SeasonData = {
 }
 
 # 时间点, 用于切换年份和季度
-
-
 @dataclass
 class TimeTable:
     year: int
     season: Season
-    table: dict[WeekDay, List[Bangumi]]
+    table: dict[str, List[Bangumi]]

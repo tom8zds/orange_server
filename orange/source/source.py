@@ -1,6 +1,6 @@
 from typing import List
 from fastapi import APIRouter
-from orange.source.model import BangumiDetail, Season, TimeTable
+from orange.source.model import BangumiDetail, Season, SubscribeChannel, TimeTable
 
 from orange.source.mikan.mikan_source import MikanSource
 from orange.source.abstract_source import AbstractSource
@@ -29,4 +29,11 @@ async def query_season(year:int, season:Season) -> TimeTable:
 async def query_bangumi_detail(id:str) -> BangumiDetail:
     assert(len(id) > 0)
     flag, data = getSource().get_bangumi_detail(id)
+    return data
+
+@router.get("/rss/",description="根据番剧id字幕组id获取rss种子列表",response_model=SubscribeChannel)
+async def get_rss_detail(id:str, provider:str) -> SubscribeChannel:
+    assert(len(id) > 0)
+    assert(len(provider) > 0)
+    flag, data = getSource().get_rss_detail(id, provider)
     return data

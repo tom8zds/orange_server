@@ -4,6 +4,7 @@ from orange.source.model import Season, WeekDay
 MIKAN_BASE = 'https://mikanani.me'
 MIKAN_SEASON = '/Home/BangumiCoverFlowByDayOfWeek'
 MIKAN_BANGUMI = '/Home/Bangumi'
+MIKAN_RSS = '/RSS/Bangumi'
 
 MikanSeasonData = {
     Season.SPRING: {
