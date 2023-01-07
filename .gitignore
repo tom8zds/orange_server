@@ -4,3 +4,4 @@ api_key.py
 .venv
 .vscode
 orange/dev_config.py
+log.txt
