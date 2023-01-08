@@ -22,7 +22,7 @@ class AbstractParser(metaclass=abc.ABCMeta):
 
     @staticmethod
     @abc.abstractmethod
-    def parse_anime_info(tmdv_id:int) -> AnimeVO:
+    def parse_anime_info(tmdv_id:int) -> dict:
         """
         get from 
             data source 

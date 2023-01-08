@@ -1,8 +1,10 @@
 from typing import List
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from orange.parser import parser
-from orange.source import source
+from orange.core.parser import parser
+from orange.core.source import source
+from orange.core.subscribe import subscribe
+
 
 orange = FastAPI()
 
@@ -24,3 +26,4 @@ async def status():
 
 orange.include_router(parser.router)
 orange.include_router(source.router)
+orange.include_router(subscribe.router)

@@ -1,7 +1,6 @@
-import json
 from typing import List
 from orange.core.vo.anime_vo import AnimeVO
-from orange.parser.abstract_parser import AbstractParser
+from orange.core.parser.abstract_parser import AbstractParser
 
 from orange.dev_config import api_key
 import tmdbsimple as tmdb
@@ -40,11 +39,11 @@ class TmdbParser(AbstractParser):
         assert(len(tmdb.API_KEY) > 0)
 
 
-    def parse_anime_info(tmdv_id:int) -> AnimeVO:
-        pass
+    def parse_anime_info(self,tmdv_id:int) -> dict:
+        return tmdb.TV(id=tmdv_id).info(language="zh")
 
-    def parse_season_info() -> None:
-        pass
-
+    def parse_season_info(self,tmdv_id:int,season_number:int) -> dict:
+        return tmdb.TV_Seasons(tv_id=tmdv_id, season_number=season_number).info(language="zh")
+        
     def parse_episode_info() -> None:
         pass

@@ -1,4 +1,4 @@
-from orange.source.model import Season, WeekDay
+from orange.core.source.model import Season, WeekDay
 
 
 MIKAN_BASE = 'https://mikanani.me'

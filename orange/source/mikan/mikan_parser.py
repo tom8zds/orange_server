@@ -3,7 +3,7 @@ import re
 from typing import List
 from orange.core.util.utils import write_log
 from orange.source.mikan.mikan_define import MIKAN_BASE, MikanWeekDay
-from orange.source.model import *
+from orange.core.source.model import *
 
 import bs4
 import xml.etree.ElementTree as ET
@@ -97,12 +97,10 @@ class MikanParser:
             item_torrent= item.find('./enclosure').get("url")
             item_size= item.findtext('./torrent/contentLength')
             item_update= item.findtext('./torrent/pubDate')
-            if(len(item_update) <23):
+            if(len(item_update) <23 and len(item_update) > 20):
                 item_update = item_update + "0"
 
             items.append(SubscribeItem(item_link, item_title, item_description,
                          item_torrent, item_size, datetime.fromisoformat(item_update).timestamp()))
-        
-        write_log(len(items))
 
         return SubscribeChannel(title, link, description, items)
