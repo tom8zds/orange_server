@@ -5,3 +5,4 @@ api_key.py
 .vscode
 orange/dev_config.py
 log.txt
+*.sqlite

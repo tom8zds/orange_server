@@ -34,7 +34,7 @@ class AbstractParser(metaclass=abc.ABCMeta):
 
     @staticmethod
     @abc.abstractmethod
-    def parse_season_info() -> None:
+    def parse_season_info(tmdv_id:int,season_number:int) -> dict:
         """
         check api token
         """

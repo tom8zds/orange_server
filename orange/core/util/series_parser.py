@@ -337,12 +337,24 @@ class SeriesParser(TitleParser):
         ]
     )
 
+    simple_traditional_regs = ReList(
+        [
+            r"简繁",
+            r"繁简",
+        ]
+    )
+
     def resolve_sub(self, data:str):
         self.sub_language = 0
         for trad in self.traditional_regs:
             res = re.search(trad, data)
             if(res):
                 self.sub_language = 1
+                break
+        for trad in self.simple_traditional_regs:
+            res = re.search(trad, data)
+            if(res):
+                self.sub_language = 2
                 break
         logger.debug("sub language detect -> {}", self.sub_language)
         
@@ -458,6 +470,8 @@ class SeriesParser(TitleParser):
                 data_parts.remove(part)
 
         data_stripped = ' '.join(data_parts).strip()
+        data_stripped= re.sub(r'\d[a-z|A-Z]+','',data_stripped)
+        data_stripped= re.sub(r'[a-z|A-Z]+','',data_stripped)
 
         logger.debug("data for date/ep/id parsing '{}'", data_stripped)
 

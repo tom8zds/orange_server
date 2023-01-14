@@ -1,4 +1,4 @@
-from datetime import datetime
+from dateutil.parser import isoparse
 import re
 from typing import List
 from orange.core.util.utils import write_log
@@ -97,10 +97,8 @@ class MikanParser:
             item_torrent= item.find('./enclosure').get("url")
             item_size= item.findtext('./torrent/contentLength')
             item_update= item.findtext('./torrent/pubDate')
-            if(len(item_update) <23 and len(item_update) > 20):
-                item_update = item_update + "0"
 
             items.append(SubscribeItem(item_link, item_title, item_description,
-                         item_torrent, item_size, datetime.fromisoformat(item_update).timestamp()))
+                         item_torrent, item_size, isoparse(item_update).timestamp()))
 
         return SubscribeChannel(title, link, description, items)
