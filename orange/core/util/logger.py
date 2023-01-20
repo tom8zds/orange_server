@@ -15,7 +15,7 @@ class Logger:
     def output(self, msg:str, level:str, frame:FrameInfo):
         time = datetime.now().time().isoformat()
         file = frame.filename.replace("\\","/").split("/")[-1].replace(".py", "")
-        log = f"{time} | {level} | {file} : {frame.function} : {frame.lineno} - {msg} \n"
+        log = f"{time} | {level} | {file} : {frame.function} : {frame.lineno} - {msg}"
         self.log.write(log)
         if(self.level == level):
             print(log)
