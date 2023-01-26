@@ -1,8 +1,10 @@
 from enum import IntEnum
 from typing import List
 from fastapi import APIRouter
-from orange.core.model.subscribe_model import Subscribe
+from orange.core.database.subscribe_model import Subscribe
+from orange.core.database.database import session
 from orange.core.source.model import SubscribeChannel
+from orange.core.subscribe.model import SubscribeVO
 from orange.dependencies import appDependency
 from orange.core.util.series_parser import SeriesParser
 from orange.core.vo.anime_vo import AnimeVO
@@ -11,14 +13,14 @@ from orange.core.util.logger import logger
 router = APIRouter(tags=["subscribe"], prefix="/subscribe",)
 
 # @router.get("/",description="根据条件获取订阅")
-# async def get_rss_detail(source_id:str, provider_id:str, tv_id:str, season_number:int):
-#     assert(len(source_id) > 0)
-#     assert(len(provider_id) > 0)
-#     assert(len(tv_id) > 0)
+# async def get_rss_detail(vo.source_id:str, vo.provider_id:str, vo.tv_id:str, season_number:int):
+#     assert(len(vo.source_id) > 0)
+#     assert(len(vo.provider_id) > 0)
+#     assert(len(vo.tv_id) > 0)
 
-#     rss:SubscribeChannel = appDependency.getSource().get_rss_detail(source_id, provider_id)
-#     tv_data = appDependency.getParser().parse_anime_info(tv_id)
-#     season_data = appDependency.getParser().parse_season_info(tv_id, season_number);
+#     rss:SubscribeChannel = appDependency.getSource().get_rss_detail(vo.source_id, vo.provider_id)
+#     tv_data = appDependency.getParser().parse_anime_info(vo.tv_id)
+#     season_data = appDependency.getParser().parse_season_info(vo.tv_id, season_number);
 
 #     result = []
 
@@ -39,15 +41,15 @@ router = APIRouter(tags=["subscribe"], prefix="/subscribe",)
     
 #     return result
 
-@router.get("/",description="生成订阅")
-async def subscribe(source_id:str, provider_id:str, tv_id:str, season_number:int):
-    assert(len(source_id) > 0)
-    assert(len(provider_id) > 0)
-    assert(len(tv_id) > 0)
+@router.post("/",description="生成订阅")
+async def subscribe(vo: SubscribeVO):
+    assert(len(vo.source_id) > 0)
+    assert(len(vo.provider_id) > 0)
+    assert(len(vo.tv_id) > 0)
 
-    rss:SubscribeChannel = appDependency.getSource().get_rss_detail(source_id, provider_id)
-    tv_data = appDependency.getParser().parse_anime_info(tv_id)
-    season_data = appDependency.getParser().parse_season_info(tv_id, season_number);
+    rss:SubscribeChannel = appDependency.getSource().get_rss_detail(vo.source_id, vo.provider_id)
+    tv_data = appDependency.getParser().parse_anime_info(vo.tv_id)
+    season_data = appDependency.getParser().parse_season_info(vo.tv_id, vo.season_number);
 
     name = tv_data.get("name") + season_data.get("name")
     status = 0
@@ -57,13 +59,14 @@ async def subscribe(source_id:str, provider_id:str, tv_id:str, season_number:int
     subscribe:Subscribe= Subscribe()
     subscribe.name = name
     subscribe.status = status
-    subscribe.source_id = source_id
-    subscribe.provider_id = provider_id
-    subscribe.tv_id = tv_id
-    subscribe.season_number = season_number
+    subscribe.source_id = vo.source_id
+    subscribe.provider_id = vo.provider_id
+    subscribe.tv_id = vo.tv_id
+    subscribe.season_number = vo.season_number
     subscribe.quality = quality
     subscribe.language = language
-    subscribe.save()
+    session.add(subscribe)
+    session.commit()
     return subscribe
 
 @router.get("/{id}",description="获取")

@@ -2,4 +2,4 @@ beautifulsoup4
 fastapi
 requests
 python-dateutil
-peewee
+SQLAlchemy

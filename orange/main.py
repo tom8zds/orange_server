@@ -4,6 +4,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from orange.core.parser import parser
 from orange.core.source import source
 from orange.core.subscribe import subscribe
+from orange.core.workflow import workflow
+
 
 
 orange = FastAPI()
@@ -27,3 +29,4 @@ async def status():
 orange.include_router(parser.router)
 orange.include_router(source.router)
 orange.include_router(subscribe.router)
+orange.include_router(workflow.router)

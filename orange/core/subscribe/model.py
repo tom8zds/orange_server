@@ -31,3 +31,10 @@ class Subscribe:
     db_tv_id:str
     season_number:int
     filter: FilterOption
+
+@dataclass
+class SubscribeVO():
+    source_id:str
+    provider_id:str
+    tv_id:str
+    season_number:int

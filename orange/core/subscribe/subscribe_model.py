@@ -1,8 +1,6 @@
 from enum import IntEnum
 from peewee import *
 
-from orange.core.model.basic_model import BasicModel
-
 class SubscribeStatus(IntEnum):
     ongoing: 0
     finish: 1
@@ -28,7 +26,7 @@ class Subscribe:
     filter:TextField()
 
 
-class Anime(BasicModel):
+class Anime:
     # db id
     id = IntegerField(primary_key=True)
     # chinese name
@@ -39,7 +37,7 @@ class Anime(BasicModel):
     overview = TextField()
 
 
-class Season(BasicModel):
+class Season:
     id:IntegerField(primary_key=True)
     anime:ForeignKeyField(Anime, backref='seasons')
     name:TextField()
