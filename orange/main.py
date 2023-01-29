@@ -7,6 +7,7 @@ from orange.core.parser import parser
 from orange.core.source import source
 from orange.core.subscribe import subscribe
 from orange.core.workflow import workflow
+from orange.core.downloader import download
 
 from orange.core.workflow import scheduler
 
@@ -32,6 +33,7 @@ orange.include_router(parser.router)
 orange.include_router(source.router)
 orange.include_router(subscribe.router)
 orange.include_router(workflow.router)
+orange.include_router(download.router)
 
 Base.metadata.create_all()
 

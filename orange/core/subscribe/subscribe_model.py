@@ -31,6 +31,7 @@ class Subscribe(Base):
     season_number= Column(Integer)
     source_id= Column(String, nullable=False)
     provider_id= Column(String, nullable=False)
+    parse_param=Column(String)
 
     episodes = relationship("Episode", backref="subscribe")
 

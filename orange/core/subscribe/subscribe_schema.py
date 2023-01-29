@@ -44,10 +44,11 @@ class EpisodeParse(EpisodeBase):
     resolve: bool = False
     parser: str 
 
-
-class Episode(EpisodeBase):
-    id: int
+class EpisodeCreate(EpisodeBase):
     subscribe_id: int
+
+class Episode(EpisodeCreate):
+    id: int
 
     class Config:
         orm_mode = True
@@ -55,6 +56,7 @@ class Episode(EpisodeBase):
 
 class SubscribeBase(BaseModel):
     tv_id: str
+    status: int = 0
     source_id: str
     provider_id: str
     season_number: int
