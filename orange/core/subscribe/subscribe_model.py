@@ -1,70 +1,40 @@
-from enum import IntEnum
-from peewee import *
+from orange.core.database.database import Base
+from sqlalchemy.orm import relationship
+from sqlalchemy import Table, Column, Integer, String, ForeignKey, UniqueConstraint
 
-class SubscribeStatus(IntEnum):
-    ongoing: 0
-    finish: 1
+class Episode(Base):
+    __tablename__ = "episode"
+    __table_args__ = (
+        UniqueConstraint("subscribe_id", "episode_number", name="ani_ep_idx"),
+    )
 
-class SubscribeQuality(IntEnum):
-    720: 0
-    1080: 1
-    any: 2
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    subscribe_id = Column(Integer, ForeignKey("subscribe.id"))
+    anime_name = Column(String, nullable=False)
+    season_number = Column(Integer)
+    episode_number = Column(Integer)
 
-class SubscribeLang(IntEnum):
-    RAW: 0
-    SC: 1
-    TC: 2
+    def __repr__(self):
+        return f"Episode(id={self.id!r}, anime_id={self.anime_name!r}, season_number={self.season_number!r}, episode_number={self.episode_number!r})"
 
+class Subscribe(Base):
+    __tablename__ = "subscribe"
+    __table_args__ = (
+        UniqueConstraint("tv_id", "season_number", name="ani_db_idx"),
+        UniqueConstraint("source_id", "provider_id", name="ani_src_idx"),
+    )
 
-class Subscribe:
-    id:AutoField()
-    source:TextField()
-    source_id:TextField()
-    rss:TextField()
-    quality:IntegerField()
-    language:IntegerField()
-    filter:TextField()
+    id= Column(Integer, primary_key=True, autoincrement=True)
+    name= Column(String, nullable=False)
+    status= Column(Integer)
+    tv_id= Column(String, nullable=False)
+    season_number= Column(Integer)
+    source_id= Column(String, nullable=False)
+    provider_id= Column(String, nullable=False)
 
+    episodes = relationship("Episode", backref="subscribe")
 
-class Anime:
-    # db id
-    id = IntegerField(primary_key=True)
-    # chinese name
-    name = TextField(null=False)
-    # cover url / uri start with http(s)://
-    cover = TextField(null=False)
-    # description
-    overview = TextField()
+    def __repr__(self):
+        return f"Subscribe(id={self.id!r}, name={self.name!r})"
 
-
-class Season:
-    id:IntegerField(primary_key=True)
-    anime:ForeignKeyField(Anime, backref='seasons')
-    name:TextField()
-    order:IntegerField()
-    # status, if finish, not loading on refresh
-    status:IntegerField()
-
-class EpisodeStatus(IntEnum):
-    notDownload:0
-    downloading:1
-    downloaded:2
-
-
-class Episode:
-    id:IntegerField(primary_key=True)
-    season:ForeignKeyField(Season, backref='episodes')
-    name:TextField()
-    status:IntegerField()
-
-class DownloadStatus(IntEnum):
-    downloading: 0
-    pause: 1
-    seeding: 2
-    end: 3
-
-
-class DownloadQueue:
-    id:IntegerField(primary_key=True)
-    Episode:ForeignKeyField(Episode, backref='downloads')
-    status:IntegerField()
+        

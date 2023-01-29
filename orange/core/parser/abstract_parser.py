@@ -22,7 +22,7 @@ class AbstractParser(metaclass=abc.ABCMeta):
 
     @staticmethod
     @abc.abstractmethod
-    def parse_anime_info(tmdv_id:int) -> dict:
+    def parse_anime_info(tv_id:int) -> dict:
         """
         get from 
             data source 
@@ -34,7 +34,14 @@ class AbstractParser(metaclass=abc.ABCMeta):
 
     @staticmethod
     @abc.abstractmethod
-    def parse_season_info(tmdv_id:int,season_number:int) -> dict:
+    def parse_anime_altnames(self,tv_id:int) -> List[str]:
+        """
+        获取中英文名称
+        """
+
+    @staticmethod
+    @abc.abstractmethod
+    def parse_season_info(tv_id:int,season_number:int) -> dict:
         """
         check api token
         """

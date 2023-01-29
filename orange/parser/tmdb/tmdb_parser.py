@@ -9,17 +9,12 @@ tmdb.API_KEY = api_key
 
 post_basic_url = "https://image.tmdb.org/t/p/original/"
 
-def write_log(message: str):
-    with open("log.txt", mode="a") as log:
-        log.write(message)
-
 class TmdbParser(AbstractParser):
     def search_anime(self, anime_name:str) -> List[AnimeVO]:
         assert(len(anime_name) > 3)
         search = tmdb.Search()
         response:dict = search.tv (query=anime_name, language="zh", include_adult=True)
-        # for s in search.results:
-        #     write_log(s['title'], s['id'], s['release_date'], s['popularity'])
+
         result: List[AnimeVO] = []
         animes: List[dict] = response.get("results")
         for anime in animes:
@@ -39,11 +34,20 @@ class TmdbParser(AbstractParser):
         assert(len(tmdb.API_KEY) > 0)
 
 
-    def parse_anime_info(self,tmdv_id:int) -> dict:
-        return tmdb.TV(id=tmdv_id).info(language="zh")
+    def parse_anime_info(self,tv_id:int) -> dict:
+        return tmdb.TV(id=tv_id).info(language="zh")
 
-    def parse_season_info(self,tmdv_id:int,season_number:int) -> dict:
-        return tmdb.TV_Seasons(tv_id=tmdv_id, season_number=season_number).info(language="zh")
+    def parse_anime_altnames(self,tv_id:int) -> dict:
+        tv = tmdb.TV(id=tv_id)
+        results = tv.alternative_titles(language="zh").get("results") + tv.alternative_titles(language="en").get("results")
+        names = []
+        for item in results:
+            names.append(item.get("title"))
+
+        return names
+
+    def parse_season_info(self,tv_id:int,season_number:int) -> dict:
+        return tmdb.TV_Seasons(tv_id=tv_id, season_number=season_number).info(language="zh")
         
     def parse_episode_info() -> None:
         pass

@@ -85,7 +85,7 @@ class MikanParser:
 
         items = []
 
-        title = tree.findtext('./channel/title')
+        title = tree.findtext('./channel/title').replace("Mikan Project - ","")
         link = tree.findtext('./channel/link')
         description = tree.findtext('./channel/description')
 
